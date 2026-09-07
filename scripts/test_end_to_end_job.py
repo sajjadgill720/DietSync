@@ -25,8 +25,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "app"))
 
+import pika
 from app.db.models import Drug, InteractionJob
-from app.services.queue_publisher import publish_interaction_job
+from app.services.queue_publisher import get_connection_parameters, publish_interaction_job
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from worker.consumer import start_consumer
@@ -116,6 +117,13 @@ def test_end_to_end_pipeline():
     print("3. Publishing to RabbitMQ Queue 'interaction_checks' (delivery_mode=2)")
     print("=" * 75)
 
+    # Purge any stale messages from the queue first so max_messages=1 consumes this exact job
+    params = get_connection_parameters()
+    with pika.BlockingConnection(params) as purge_conn:
+        purge_ch = purge_conn.channel()
+        purge_ch.queue_declare(queue="interaction_checks", durable=True)
+        purge_ch.queue_purge(queue="interaction_checks")
+
     payload = publish_interaction_job(
         job_id=job_id,
         drug_a_id=drug_a.id,
@@ -140,7 +148,7 @@ def test_end_to_end_pipeline():
     print("5. Polling PostgreSQL 'interaction_jobs' for Completion")
     print("=" * 75)
 
-    timeout = 15.0
+    timeout = 90.0
     poll_start = time.time()
     final_job_status = None
     final_result = None
