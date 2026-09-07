@@ -1,0 +1,562 @@
+[
+  {
+    "id": "eval_001",
+    "drug_a": {
+      "id": 3,
+      "brand_name": "Disprin Tablet",
+      "generic_name": "Acetylsalicylic Acid",
+      "rxcui": "1191"
+    },
+    "drug_b": {
+      "id": 17,
+      "brand_name": "WARFARIN TABLETS 1MG",
+      "generic_name": "WARFARIN SOD. BP",
+      "rxcui": "11289"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "major",
+    "expected_keywords": [
+      "bleeding",
+      "anticoagulant",
+      "hemorrhage",
+      "salicylate",
+      "platelet"
+    ],
+    "clinical_mechanism": "Concomitant administration of salicylates (aspirin) with warfarin increases the risk of major gastrointestinal and systemic bleeding due to platelet inhibition and mucosal injury.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_002",
+    "drug_a": {
+      "id": 10,
+      "brand_name": "Klaricid 250mg Tablets",
+      "generic_name": "Clarithromycin",
+      "rxcui": "21212"
+    },
+    "drug_b": {
+      "id": 11,
+      "brand_name": "Lipitor Tablet 10mg",
+      "generic_name": "Atorvastatin Calcium",
+      "rxcui": "83366"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "contraindicated",
+    "expected_keywords": [
+      "rhabdomyolysis",
+      "myopathy",
+      "cyp3a4",
+      "atorvastatin",
+      "clarithromycin"
+    ],
+    "clinical_mechanism": "Clarithromycin is a potent CYP3A4 inhibitor that markedly elevates atorvastatin exposure, significantly increasing the hazard of severe myopathy and rhabdomyolysis.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_003",
+    "drug_a": {
+      "id": 4,
+      "brand_name": "BRUFEN 200MG TAB",
+      "generic_name": "Ibuprofen",
+      "rxcui": "5640"
+    },
+    "drug_b": {
+      "id": 17,
+      "brand_name": "WARFARIN TABLETS 1MG",
+      "generic_name": "WARFARIN SOD. BP",
+      "rxcui": "11289"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "major",
+    "expected_keywords": [
+      "bleeding",
+      "gastrointestinal",
+      "inr",
+      "anticoagulant",
+      "hemorrhage"
+    ],
+    "clinical_mechanism": "NSAIDs such as ibuprofen inhibit platelet function and can cause gastrointestinal ulceration, potentiating bleeding hazards when co-administered with warfarin.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_004",
+    "drug_a": {
+      "id": 3,
+      "brand_name": "Disprin Tablet",
+      "generic_name": "Acetylsalicylic Acid",
+      "rxcui": "1191"
+    },
+    "drug_b": {
+      "id": 4,
+      "brand_name": "BRUFEN 200MG TAB",
+      "generic_name": "Ibuprofen",
+      "rxcui": "5640"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "moderate",
+    "expected_keywords": [
+      "aspirin",
+      "ibuprofen",
+      "gastrointestinal",
+      "ulceration",
+      "cardioprotective"
+    ],
+    "clinical_mechanism": "Ibuprofen interferes competitively with the irreversible platelet inhibition of low-dose aspirin, attenuating its cardioprotective efficacy while increasing ulcer risk.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_005",
+    "drug_a": {
+      "id": 13,
+      "brand_name": "ZESTRIL TABLETS 5MG",
+      "generic_name": "Lisinopril",
+      "rxcui": "29046"
+    },
+    "drug_b": {
+      "id": 16,
+      "brand_name": "Lasix Tablet 40mg",
+      "generic_name": "Frusemide",
+      "rxcui": "4603"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "moderate",
+    "expected_keywords": [
+      "hypotension",
+      "renal",
+      "diuretic",
+      "blood pressure",
+      "furosemide"
+    ],
+    "clinical_mechanism": "Combining an ACE inhibitor (lisinopril) with a potent loop diuretic (furosemide) can induce severe first-dose hypotension and acute renal impairment.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_006",
+    "drug_a": {
+      "id": 8,
+      "brand_name": "Flagyl Plus Tablet",
+      "generic_name": "Metronidazole",
+      "rxcui": "6922"
+    },
+    "drug_b": {
+      "id": 17,
+      "brand_name": "WARFARIN TABLETS 1MG",
+      "generic_name": "WARFARIN SOD. BP",
+      "rxcui": "11289"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "major",
+    "expected_keywords": [
+      "warfarin",
+      "prothrombin",
+      "anticoagulant",
+      "bleeding",
+      "inr"
+    ],
+    "clinical_mechanism": "Metronidazole significantly potentiates the anticoagulant effect of warfarin by decreasing the metabolism of S-warfarin, precipitating hemorrhage.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_007",
+    "drug_a": {
+      "id": 10,
+      "brand_name": "Klaricid 250mg Tablets",
+      "generic_name": "Clarithromycin",
+      "rxcui": "21212"
+    },
+    "drug_b": {
+      "id": 17,
+      "brand_name": "WARFARIN TABLETS 1MG",
+      "generic_name": "WARFARIN SOD. BP",
+      "rxcui": "11289"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "interaction_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "major",
+    "expected_keywords": [
+      "warfarin",
+      "prothrombin",
+      "anticoagulant",
+      "bleeding",
+      "inr"
+    ],
+    "clinical_mechanism": "Macrolide antibiotics (clarithromycin) inhibit CYP metabolism and gut flora clearance of warfarin, causing dangerous elevations in prothrombin time.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_008",
+    "drug_a": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "drug_b": {
+      "id": 15,
+      "brand_name": "Norvasc Tablet 5mg",
+      "generic_name": "Amlodipine (besylate)",
+      "rxcui": "104416"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "No documented drug-drug interaction between paracetamol and amlodipine.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_009",
+    "drug_a": {
+      "id": 7,
+      "brand_name": "Augmentin BD 457mg/5ml Suspension",
+      "generic_name": "Potassium clavulanate eq to clavulanic acid",
+      "rxcui": null
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Commonly co-prescribed analgesic/antipyretic with penicillin antibiotic; no mutual drug-drug interaction in official label text.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_010",
+    "drug_a": {
+      "id": 11,
+      "brand_name": "Lipitor Tablet 10mg",
+      "generic_name": "Atorvastatin Calcium",
+      "rxcui": "83366"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "No significant pharmacokinetic interaction between paracetamol and atorvastatin.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_011",
+    "drug_a": {
+      "id": 18,
+      "brand_name": "Risek Insta Sachet 40mg + 1680mg",
+      "generic_name": "Omeprazole",
+      "rxcui": "7646"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Omeprazole does not significantly interact with standard therapeutic doses of paracetamol.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_012",
+    "drug_a": {
+      "id": 19,
+      "brand_name": "Ventolin 2mg Tablet",
+      "generic_name": "Salbutamol sulphate eq. to Salbutamol",
+      "rxcui": null
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "No interaction between beta-2 adrenergic agonist salbutamol and paracetamol.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_013",
+    "drug_a": {
+      "id": 15,
+      "brand_name": "Norvasc Tablet 5mg",
+      "generic_name": "Amlodipine (besylate)",
+      "rxcui": "104416"
+    },
+    "drug_b": {
+      "id": 12,
+      "brand_name": "Glucophage XR Tablet",
+      "generic_name": "Metformin Hydrochloride",
+      "rxcui": "235743"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Amlodipine and metformin have no documented mutual adverse interactions.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_014",
+    "drug_a": {
+      "id": 18,
+      "brand_name": "Risek Insta Sachet 40mg + 1680mg",
+      "generic_name": "Omeprazole",
+      "rxcui": "7646"
+    },
+    "drug_b": {
+      "id": 12,
+      "brand_name": "Glucophage XR Tablet",
+      "generic_name": "Metformin Hydrochloride",
+      "rxcui": "235743"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Omeprazole and metformin are co-administered without significant mutual interaction.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_015",
+    "drug_a": {
+      "id": 7,
+      "brand_name": "Augmentin BD 457mg/5ml Suspension",
+      "generic_name": "Potassium clavulanate eq to clavulanic acid",
+      "rxcui": null
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [
+      "penicillin"
+    ],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": true,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Augmentin contains amoxicillin (extended-spectrum penicillin, ATC J01CA); it triggers an allergy cross-reactivity flag for a patient with documented penicillin allergy.",
+    "source": "RxClass"
+  },
+  {
+    "id": "eval_016",
+    "drug_a": {
+      "id": 4,
+      "brand_name": "BRUFEN 200MG TAB",
+      "generic_name": "Ibuprofen",
+      "rxcui": "5640"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [
+      "aspirin"
+    ],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": true,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Brufen contains ibuprofen (propionic acid NSAID, ATC M01AE); patients with aspirin hypersensitivity cross-react with ibuprofen due to COX-1 inhibition and leukotriene shift.",
+    "source": "RxClass"
+  },
+  {
+    "id": "eval_017",
+    "drug_a": {
+      "id": 16,
+      "brand_name": "Lasix Tablet 40mg",
+      "generic_name": "Frusemide",
+      "rxcui": "4603"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [
+      "sulfonamide"
+    ],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": true,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Lasix contains furosemide (sulfonamide loop diuretic, ATC C03CA); triggers a cautionary allergy warning for patients with stated sulfonamide allergy.",
+    "source": "RxClass"
+  },
+  {
+    "id": "eval_018",
+    "drug_a": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "drug_b": {
+      "id": 15,
+      "brand_name": "Norvasc Tablet 5mg",
+      "generic_name": "Amlodipine (besylate)",
+      "rxcui": "104416"
+    },
+    "patient_allergies": [
+      "penicillin"
+    ],
+    "patient_diet_factors": [],
+    "expected_status": "none_found",
+    "expected_has_allergy": false,
+    "expected_has_food": null,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Neither paracetamol nor amlodipine shares structural or immunologic cross-reactivity with penicillin.",
+    "source": "RxClass"
+  },
+  {
+    "id": "eval_019",
+    "drug_a": {
+      "id": 11,
+      "brand_name": "Lipitor Tablet 10mg",
+      "generic_name": "Atorvastatin Calcium",
+      "rxcui": "83366"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [
+      "grapefruit"
+    ],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": true,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Atorvastatin FDA label explicitly warns that grapefruit juice increases plasma concentrations of atorvastatin and can increase the risk for myopathy and rhabdomyolysis.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_020",
+    "drug_a": {
+      "id": 8,
+      "brand_name": "Flagyl Plus Tablet",
+      "generic_name": "Metronidazole",
+      "rxcui": "6922"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [
+      "alcohol"
+    ],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": true,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Metronidazole FDA label explicitly warns against alcohol consumption during therapy due to potential disulfiram-like ethanol intolerance reactions.",
+    "source": "openFDA"
+  },
+  {
+    "id": "eval_021",
+    "drug_a": {
+      "id": 17,
+      "brand_name": "WARFARIN TABLETS 1MG",
+      "generic_name": "WARFARIN SOD. BP",
+      "rxcui": "11289"
+    },
+    "drug_b": {
+      "id": 1,
+      "brand_name": "Panadol Tablet.",
+      "generic_name": "PARACETAMOL",
+      "rxcui": "161"
+    },
+    "patient_allergies": [],
+    "patient_diet_factors": [
+      "alcohol"
+    ],
+    "expected_status": "none_found",
+    "expected_has_allergy": null,
+    "expected_has_food": true,
+    "severity": "none",
+    "expected_keywords": [],
+    "clinical_mechanism": "Warfarin label explicitly notes that acute alcohol consumption increases INR and bleeding risk.",
+    "source": "openFDA"
+  }
+]

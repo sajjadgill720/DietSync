@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pika
+langgraph
+langchain
+langsmith
+httpx
+beautifulsoup4
+pydantic
+alembic

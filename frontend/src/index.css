@@ -1,0 +1,418 @@
+/* DietSync Minimal Functional CSS */
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
+  --border-color: #cbd5e1;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success-bg: #f0fdf4;
+  --success-border: #86efac;
+  --success-text: #166534;
+  --danger-bg: #fef2f2;
+  --danger-border: #fca5a5;
+  --danger-text: #991b1b;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-text: #92400e;
+  --info-bg: #f0f9ff;
+  --info-border: #7dd3fc;
+  --info-text: #0369a1;
+  --purple-bg: #faf5ff;
+  --purple-border: #d8b4fe;
+  --purple-text: #6b21a8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  padding: 24px 16px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.grid-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 680px) {
+  .grid-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+button {
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+button.btn-primary {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+button.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+button.btn-primary:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+button.btn-secondary {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+button.btn-secondary:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+button.btn-action {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  margin-top: 8px;
+}
+
+/* Candidate Picker */
+.candidate-picker {
+  margin-top: 10px;
+  background-color: #f8fafc;
+  border: 1px dashed #94a3b8;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.candidate-picker-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.candidate-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.candidate-item:hover {
+  background-color: #f1f5f9;
+  border-color: var(--primary);
+}
+
+.candidate-item .badge-form {
+  font-size: 0.75rem;
+  background: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #475569;
+}
+
+/* Selected Drug Badge */
+.selected-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success-text);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.status-msg {
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.status-error {
+  color: var(--danger-text);
+}
+
+.status-loading {
+  color: #64748b;
+}
+
+/* Patient Context Accordion / Inputs */
+.optional-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+.optional-section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+/* Interaction Status Panels */
+.result-container {
+  margin-top: 24px;
+}
+
+.result-panel {
+  border-radius: 8px;
+  padding: 24px;
+  border: 2px solid;
+  margin-top: 16px;
+}
+
+/* 1. Real Finding: interaction_found */
+.panel-interaction-found {
+  background-color: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: #7f1d1d;
+}
+
+.panel-header-danger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--danger-text);
+  margin-bottom: 12px;
+}
+
+/* 2. Negative Finding: none_found */
+.panel-none-found {
+  background-color: var(--info-bg);
+  border-color: var(--info-border);
+  color: #0c4a6e;
+}
+
+.panel-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--info-text);
+  margin-bottom: 12px;
+}
+
+/* 3. Safety Refusal: unverifiable */
+.panel-unverifiable {
+  background-color: var(--purple-bg);
+  border-color: var(--purple-border);
+  color: #581c87;
+}
+
+.panel-header-purple {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--purple-text);
+  margin-bottom: 12px;
+}
+
+/* 4. Failed */
+.panel-failed {
+  background-color: #fff1f2;
+  border-color: #fecdd3;
+  color: #9f1239;
+}
+
+.panel-body {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.citation-box {
+  background: rgba(255, 255, 255, 0.7);
+  border-left: 4px solid #475569;
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  margin: 14px 0;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.citation-label {
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.safety-note {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.meta-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: #64748b;
+  align-items: center;
+}
+
+.meta-tag {
+  background: #e2e8f0;
+  color: #334155;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.meta-tag-source {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.flags-box {
+  margin-top: 12px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.progress-banner {
+  padding: 16px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  text-align: center;
+  color: #334155;
+  font-weight: 500;
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
