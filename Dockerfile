@@ -28,5 +28,5 @@ RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 # Default port
 EXPOSE 8000
 
-# Universal entrypoint: reads $PORT dynamically (Render sets PORT=10000, local defaults to 8000)
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Start FastAPI with dynamic $PORT evaluation (Render sets PORT=10000, defaults to 8000)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
