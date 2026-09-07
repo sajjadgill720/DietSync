@@ -1,12 +1,15 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 psycopg2-binary
 pika
 langgraph
 langchain
+langchain-openai
 langsmith
 httpx
 beautifulsoup4
 pydantic
 alembic
+python-dotenv
+

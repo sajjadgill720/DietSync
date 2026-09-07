@@ -280,7 +280,20 @@ python scripts/run_eval.py --no-wsl-delegate
 
 ---
 
-## 7. Known Limitations / Explicitly Deferred Decisions
+## 7. Production Deployment & Cloud Hosting
+
+Detailed instructions for deploying DietSync after pushing to GitHub are in [DEPLOYMENT.md](file:///DEPLOYMENT.md).
+
+Quick Overview of deployment paths:
+- **One-Command Cloud VPS (Docker Compose)**: Clone repo on Ubuntu VPS and run `docker compose -f docker-compose.prod.yml up -d --build`. Automatic SSL available with Caddy.
+- **Managed PaaS (Railway / Render)**: Connect GitHub repo, add managed PostgreSQL and RabbitMQ, set API start command and Worker start command.
+- **Hybrid (Vercel Frontend + Cloud Backend)**: Connect GitHub repo to Vercel (Root directory: `frontend`), set `VITE_API_BASE` and `VITE_WS_BASE`.
+- **Automated CI/CD**: Every push to GitHub runs automated backend allergy/diet regression tests and frontend build verification via [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml).
+
+---
+
+## 8. Known Limitations / Explicitly Deferred Decisions
+
 
 *(Copied verbatim from `PROJECT_SPEC.md` lines 340–353 — documented as honest scope boundaries rather than gaps to hide)*
 
