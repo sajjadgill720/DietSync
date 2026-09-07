@@ -30,7 +30,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "app"))
 
+from dotenv import load_dotenv
+load_dotenv(REPO_ROOT / ".env")
+
 from app.db.listeners import notify_channel
+
 from app.db.models import Drug, DrugIngredient, FDALabel, InteractionJob
 from app.services.queue_publisher import (
     DEFAULT_RABBITMQ_URL,

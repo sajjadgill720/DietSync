@@ -180,6 +180,21 @@ def _find_exact_source_sentence(source_text: str, keyword_terms: List[str]) -> O
     return None
 
 
+def _create_llm(api_key: str):
+    """Initializes LLM, automatically configuring Groq or OpenAI based on API key prefix."""
+    from langchain_openai import ChatOpenAI
+    clean_key = api_key.strip()
+    if clean_key.startswith("gsk_"):
+        return ChatOpenAI(
+            model="openai/gpt-oss-120b",
+            base_url="https://api.groq.com/openai/v1",
+            temperature=0,
+            api_key=clean_key,
+        )
+    return ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=clean_key)
+
+
+
 def check_interaction(state: InteractionState) -> dict:
     """
     Reads both drugs' drug_interactions / warnings text, determines if either mentions
@@ -203,9 +218,9 @@ def check_interaction(state: InteractionState) -> dict:
     if api_key:
         try:
             from langchain_core.messages import HumanMessage, SystemMessage
-            from langchain_openai import ChatOpenAI
 
-            llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=api_key)
+            llm = _create_llm(api_key)
+
 
             system_prompt = (
                 "You are an expert clinical pharmacologist operating under strict recall-over-precision "
@@ -325,9 +340,9 @@ def check_food_interaction(state: InteractionState) -> dict:
     if api_key:
         try:
             from langchain_core.messages import HumanMessage, SystemMessage
-            from langchain_openai import ChatOpenAI
 
-            llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=api_key)
+            llm = _create_llm(api_key)
+
 
             diet_terms_str = ", ".join(patient_diet) if patient_diet else "standard food/alcohol interactions"
             system_prompt = (
@@ -438,9 +453,9 @@ def _verify_claim_citation(claim: str, citation: str, raw_source: str, api_key: 
     if api_key:
         try:
             from langchain_core.messages import HumanMessage, SystemMessage
-            from langchain_openai import ChatOpenAI
 
-            verifier_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=api_key)
+            verifier_llm = _create_llm(api_key)
+
 
             verifier_prompt = (
                 "You are an independent verification auditor. You are given only:\n"

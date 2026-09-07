@@ -11,8 +11,12 @@ Provides:
 """
 
 import logging
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv()
+
 
 from app.routes.check import router as check_router
 from app.routes.resolve import router as resolve_router

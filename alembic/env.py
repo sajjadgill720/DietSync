@@ -8,7 +8,11 @@ from sqlalchemy import pool
 from alembic import context
 
 # Ensure repo root is on sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, REPO_ROOT)
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(REPO_ROOT, ".env"))
 
 from app.db.models import Base
 
@@ -18,6 +22,7 @@ config = context.config
 
 # Allow environment variable DATABASE_URL to override config
 db_url = os.getenv("DATABASE_URL")
+
 if db_url:
     # Ensure psycopg2 driver is specified for postgresql URLs
     if db_url.startswith("postgresql://"):
