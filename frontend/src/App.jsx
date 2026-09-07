@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
 const WS_BASE = import.meta.env.VITE_WS_BASE || 'ws://127.0.0.1:8000';
 
-// Curated Pakistani Brand Suggestions for rapid triage
+// Curated Pakistani Brands for fast one-click resolution
 const QUICK_BRANDS = [
   'Panadol',
   'Disprin',
@@ -17,38 +17,42 @@ const QUICK_BRANDS = [
   'Keflex',
 ];
 
-// Clinical Presets for live pitch & physician demonstrations
+// High-impact Clinical Demo Presets (Bento Grid)
 const CLINICAL_PRESETS = [
   {
     id: 'anticoag_bleeding',
-    title: 'Aspirin + Warfarin (Severe Bleeding)',
+    title: 'Aspirin + Warfarin',
+    badge: '🔴 Critical Hazard',
     drugA: 'Disprin',
     drugB: 'Warfarin',
     allergies: '',
     diet: '',
-    description: 'High-risk bleeding contraindication: additive antiplatelet & prothrombin inhibition.',
+    description: 'Additive antiplatelet & prothrombin inhibition causing severe bleeding risk.',
   },
   {
     id: 'statin_macrolide_grapefruit',
     title: 'Lipitor + Klaricid + Grapefruit',
+    badge: '🔴 Contraindicated + Diet',
     drugA: 'Lipitor',
     drugB: 'Klaricid',
     allergies: '',
     diet: 'grapefruit juice',
-    description: 'Severe CYP3A4 inhibition leading to elevated statin levels & rhabdomyolysis.',
+    description: 'CYP3A4 blockade elevating statin levels; rhabdomyolysis warning.',
   },
   {
     id: 'penicillin_allergy',
     title: 'Augmentin + Penicillin Allergy',
+    badge: '🛑 Allergy Cross-Reactivity',
     drugA: 'Augmentin',
     drugB: 'Panadol',
     allergies: 'penicillin',
     diet: '',
-    description: 'Deterministic cross-reactivity alert via NIH RxClass with zero LLM speculation.',
+    description: 'Deterministic beta-lactam class match via NIH RxClass with 0 LLM calls.',
   },
   {
     id: 'safe_coprescribe',
-    title: 'Panadol + Norvasc (Clean Negative)',
+    title: 'Panadol + Norvasc',
+    badge: '🟢 Safe Co-Prescribing',
     drugA: 'Panadol',
     drugB: 'Norvasc',
     allergies: '',
@@ -57,23 +61,23 @@ const CLINICAL_PRESETS = [
   },
   {
     id: 'nsaid_interference',
-    title: 'Brufen + Disprin (Antiplatelet Block)',
+    title: 'Brufen + Disprin',
+    badge: '🟠 Antiplatelet Block',
     drugA: 'Brufen',
     drugB: 'Disprin',
     allergies: '',
     diet: '',
-    description: 'Competitive COX-1 interference diminishing cardioprotective effect.',
+    description: 'Competitive COX-1 interference diminishing aspirin cardioprotection.',
   },
 ];
 
-// Common Allergies & Diet Factors for quick click-to-add
+// Quick click-to-add allergies and dietary factors
 const QUICK_ALLERGIES = ['penicillin', 'aspirin', 'sulfa', 'codeine', 'cephalosporin'];
 const QUICK_DIET = ['grapefruit juice', 'alcohol', 'smoking', 'high-potassium diet'];
 
 /**
- * Drug Resolver / Autocomplete Component
- * Queries POST /resolve synchronously.
- * Strictly adheres to DRAP brand privacy constraint: display names only, no DRAP reg numbers.
+ * Drug Resolver Component
+ * Adheres strictly to DRAP brand privacy constraint: display names only, no DRAP registration numbers.
  */
 function DrugResolver({
   label,
@@ -81,8 +85,7 @@ function DrugResolver({
   selectedDrug,
   onSelect,
   onClear,
-  onQuickSelect,
-  inputPlaceholder = 'e.g. Panadol, Brufen, Disprin...',
+  inputPlaceholder = 'e.g. Disprin, Lipitor, Panadol...',
 }) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -121,7 +124,7 @@ function DrugResolver({
         setNotFound(true);
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Failed to resolve entity');
+      setErrorMsg(err.message || 'Failed to resolve drug entity');
     } finally {
       setLoading(false);
     }
@@ -138,32 +141,31 @@ function DrugResolver({
 
   if (selectedDrug) {
     return (
-      <div className="field-group">
-        <div className="field-label">
-          <span>{label}</span>
-          <span className="field-label-pill">{roleLabel}</span>
+      <div className="agent-card-box">
+        <div className="agent-header-pill">
+          <span className="agent-role-tag">{label}</span>
+          <span className="agent-role-pill">{roleLabel}</span>
         </div>
-        <div className="selected-drug-card">
-          <div className="selected-drug-info">
-            <div className="selected-drug-name">
-              <span>{selectedDrug.display_name}</span>
-            </div>
-            <div className="selected-drug-meta">
-              <span>Generic Entity ID: #{selectedDrug.drug_id}</span>
+        <div className="resolved-entity-card">
+          <div>
+            <div className="entity-name-text">{selectedDrug.display_name}</div>
+            <div className="entity-sub-text">
+              <span>Generic Entity #{selectedDrug.drug_id}</span>
               {selectedDrug.dosage_form && <span>• {selectedDrug.dosage_form}</span>}
-              <span>• RxNorm Normalized</span>
+              <span>• RxNorm INN/USAN</span>
             </div>
           </div>
           <button
             type="button"
-            className="btn-secondary btn-small"
+            className="btn-futuristic-primary"
+            style={{ padding: '6px 14px', fontSize: '0.8rem' }}
             onClick={() => {
               onClear();
               setQuery('');
               setCandidates(null);
             }}
           >
-            Change Entity
+            Change
           </button>
         </div>
       </div>
@@ -171,16 +173,16 @@ function DrugResolver({
   }
 
   return (
-    <div className="field-group">
-      <div className="field-label">
-        <span>{label}</span>
-        <span className="field-label-pill">{roleLabel}</span>
+    <div className="agent-card-box">
+      <div className="agent-header-pill">
+        <span className="agent-role-tag">{label}</span>
+        <span className="agent-role-pill">{roleLabel}</span>
       </div>
 
-      <div className="input-row">
+      <div className="input-with-button">
         <input
           type="text"
-          className="clinical-input"
+          className="futuristic-input"
           placeholder={inputPlaceholder}
           value={query}
           onChange={(e) => {
@@ -197,7 +199,7 @@ function DrugResolver({
         />
         <button
           type="button"
-          className="btn-primary"
+          className="btn-futuristic-primary"
           disabled={loading || !query.trim()}
           onClick={() => handleResolve()}
         >
@@ -205,12 +207,12 @@ function DrugResolver({
         </button>
       </div>
 
-      {/* Quick Brand Suggestions */}
-      <div className="quick-brands-list">
+      {/* Quick Brand Selector Chips */}
+      <div className="quick-brand-chips-row">
         {QUICK_BRANDS.map((b) => (
           <span
             key={b}
-            className="brand-chip"
+            className="brand-chip-item"
             onClick={() => {
               setQuery(b);
               handleResolve(b);
@@ -222,33 +224,37 @@ function DrugResolver({
       </div>
 
       {loading && (
-        <div className="status-msg status-loading">
-          <span className="spinner-clinical" style={{ width: 14, height: 14, margin: 0, borderWidth: 2 }}></span>
-          Standardizing brand entity via RxNorm & openFDA...
+        <div style={{ fontSize: '0.8rem', color: '#38bdf8', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span className="futuristic-spinner" style={{ width: 14, height: 14, margin: 0, borderWidth: 2 }}></span>
+          Standardizing brand entity via DRAP ➔ RxNorm INN/USAN...
         </div>
       )}
       {notFound && (
-        <div className="status-msg status-error">
-          Brand entity not identified. Verify spelling or enter active generic substance.
+        <div style={{ fontSize: '0.8rem', color: '#fb7185', marginTop: '10px' }}>
+          ⚠️ Entity not identified in DRAP dataset. Check spelling or try generic name.
         </div>
       )}
-      {errorMsg && <div className="status-msg status-error">{errorMsg}</div>}
+      {errorMsg && (
+        <div style={{ fontSize: '0.8rem', color: '#fb7185', marginTop: '10px' }}>{errorMsg}</div>
+      )}
 
       {/* Disambiguation Picker */}
       {candidates && candidates.length > 0 && (
-        <div className="candidate-picker">
-          <div className="candidate-picker-title">
-            Multiple formulations identified — Select specific product:
-          </div>
-          <div className="candidate-list">
+        <div className="disambiguation-dropdown">
+          <div className="disambig-title">Multiple formulations found — Select exact product:</div>
+          <div className="disambig-list">
             {candidates.map((cand, idx) => (
               <div
                 key={idx}
-                className="candidate-item"
+                className="disambig-item"
                 onClick={() => handleCandidateClick(cand)}
               >
                 <span>{cand.display_name}</span>
-                {cand.dosage_form && <span className="badge-form">{cand.dosage_form}</span>}
+                {cand.dosage_form && (
+                  <span style={{ fontSize: '0.7rem', padding: '2px 6px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}>
+                    {cand.dosage_form}
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -260,7 +266,7 @@ function DrugResolver({
 
 /**
  * Result Panel Component
- * Displays differentiated clinical safety findings with Doctor Clinical Directives
+ * Bento Grid style results display with Doctor Directives & Verbatim Quotations
  */
 function ResultPanel({
   jobStatus,
@@ -278,15 +284,15 @@ function ResultPanel({
 
   if (jobStatus === 'queued' || jobStatus === 'processing') {
     return (
-      <div className="loading-progress-card">
-        <div className="spinner-clinical"></div>
-        <h4 style={{ color: '#ffffff', marginBottom: '8px' }}>
-          Clinical Safety Evaluation in Progress
-        </h4>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+      <div className="in-flight-card">
+        <div className="futuristic-spinner"></div>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: '#ffffff', marginBottom: '8px' }}>
+          AI Safety Verification in Progress
+        </h3>
+        <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
           {jobStatus === 'queued'
-            ? 'Task queued in RabbitMQ (priority high)...'
-            : 'LangGraph multi-agent pipeline verifying manufacturer citations vs openFDA...'}
+            ? '⚡ Job queued in CloudAMQP broker (prefetch_count=1)...'
+            : '🔬 LangGraph multi-agent pipeline verifying manufacturer citations against raw openFDA text...'}
         </p>
       </div>
     );
@@ -294,16 +300,10 @@ function ResultPanel({
 
   if (jobStatus === 'failed' || (!result && errorMessage)) {
     return (
-      <div className="triage-card triage-critical">
-        <div className="triage-header-critical">
-          <span className="severity-indicator-pill-critical">System Error</span>
-          <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f43f5e' }}>
-            Verification Pipeline Interrupted
-          </span>
-        </div>
-        <p style={{ color: '#e2e8f0' }}>
-          {errorMessage || 'An error occurred during evaluation. Please verify database connectivity.'}
-        </p>
+      <div className="triage-hero-banner triage-hero-critical">
+        <span className="severity-pill-pulsing pill-critical">System Error</span>
+        <h4 style={{ color: '#ffffff', fontSize: '1.2rem', marginBottom: '8px' }}>Evaluation Pipeline Failed</h4>
+        <p style={{ color: '#fda4af' }}>{errorMessage || 'An error occurred during evaluation.'}</p>
       </div>
     );
   }
@@ -321,13 +321,13 @@ function ResultPanel({
   const isSafe = final_status === 'none_found';
   const isRefusal = final_status === 'unverifiable';
 
-  // Doctor Action Directives
+  // Prescriber directives for doctors
   const getClinicalDirectives = () => {
     if (isCritical) {
       return [
         'CLINICAL ACTION: Avoid simultaneous co-administration where therapeutic alternatives exist.',
-        'LABORATORY MONITORING: Order baseline and serial coagulation / metabolic panels (INR, Serum Creatinine, Liver Transaminases).',
-        'PATIENT INSTRUCTION: Counsel patient on early signs of adverse event (melena, unexpected hematoma, dizziness, dark urine).',
+        'LAB MONITORING: Order baseline and serial coagulation / metabolic panels (INR, Serum Creatinine, LFTs).',
+        'PATIENT INSTRUCTION: Counsel patient on early signs of adverse event (melena, unexplained hematoma, dizziness).',
       ];
     }
     if (isSafe) {
@@ -337,65 +337,49 @@ function ResultPanel({
       ];
     }
     return [
-      'SAFETY NOTICE: The submitted interaction hypothesis failed verbatim groundedness verification.',
+      'SAFETY NOTICE: The submitted interaction claim failed verbatim groundedness verification.',
       'CLINICAL ACTION: System refused to speculate. Consult primary clinical literature (BNF / Micromedex) before co-prescribing.',
     ];
   };
 
-  // Generate EMR Formatted Note
   const generateEMRNote = () => {
     const timestamp = new Date().toLocaleString();
-    const vitalsStr = `Patient: ${patientProfile.ageGroup} | Renal Function: ${patientProfile.eGFR} | Hepatic: ${patientProfile.hepatic} | Pregnancy/Lactation: ${patientProfile.pregnancy}`;
-    const comorbiditiesStr = patientProfile.comorbidities.length
-      ? patientProfile.comorbidities.join(', ')
-      : 'None reported';
-    const allergiesStr = patientProfile.allergies || 'NKDA (No Known Drug Allergies)';
+    const vitalsStr = `Patient: ${patientProfile.ageGroup} | eGFR: ${patientProfile.eGFR} | Hepatic: ${patientProfile.hepatic} | Status: ${patientProfile.pregnancy}`;
+    const comorbiditiesStr = patientProfile.comorbidities.length ? patientProfile.comorbidities.join(', ') : 'None';
+    const allergiesStr = patientProfile.allergies || 'NKDA';
     const dietStr = patientProfile.diet || 'Standard diet';
 
-    let findingText = '';
-    if (isCritical) {
-      findingText = `[HIGH RISK INTERACTION IDENTIFIED]\nFinding: ${summary}\nManufacturer Citation: "${citation_text || 'N/A'}"`;
-    } else if (isSafe) {
-      findingText = `[NO DOCUMENTED INTERACTION]\nFinding: ${summary || 'No adverse interaction documented in official manufacturer labeling.'}`;
-    } else {
-      findingText = `[UNVERIFIABLE / SAFETY REFUSAL]\nFinding: Claim failed strict groundedness verification. Refusal enforced.`;
-    }
+    let finding = '';
+    if (isCritical) finding = `[HIGH RISK INTERACTION IDENTIFIED]\nMechanism: ${summary}\nVerbatim Citation: "${citation_text || 'N/A'}"`;
+    else if (isSafe) finding = `[NO DOCUMENTED INTERACTION]\nFinding: ${summary || 'No adverse interaction documented in official manufacturer labeling.'}`;
+    else finding = `[UNVERIFIABLE / SAFETY REFUSAL]\nFinding: Claim failed strict groundedness verification. Refusal enforced.`;
 
-    let allergyText = '';
+    let allergiesBlock = '';
     if (allergy_flags && allergy_flags.length > 0) {
-      allergyText = `\n[ALLERGY CROSS-REACTIVITY ALERT]\n` +
-        allergy_flags
-          .map(
-            (f) =>
-              `- Allergen: ${f.allergy_term || 'Unknown'} | Matched Class: ${f.matched_class || 'N/A'} | Note: ${f.clinical_note || f.cross_reactivity_note || 'Flagged'} (Ref: ${f.reference || 'Pharmacological reference'})`
-          )
-          .join('\n');
+      allergiesBlock = `\n[ALLERGY CROSS-REACTIVITY ALERT]\n` + allergy_flags.map((f) => `- ${f.allergy_term} vs ${f.matched_class}: ${f.clinical_note || f.cross_reactivity_note} (Ref: ${f.reference || 'Literature'})`).join('\n');
     }
 
-    let foodText = '';
-    if (food_interaction_summary) {
-      foodText = `\n[DIETARY / FOOD PRECAUTION]\n- ${food_interaction_summary}`;
-    }
+    let foodBlock = food_interaction_summary ? `\n[DIETARY / FOOD PRECAUTION]\n- ${food_interaction_summary}` : '';
 
     return `================================================================================
-CLINICAL PHARMACOLOGY CONSULTATION NOTE
-DietSync Clinical Decision Support System (CDS)
+CLINICAL PHARMACOLOGY DECISION SUPPORT CONSULTATION
+DietSync Telehealth & Prescribing Intelligence
 Timestamp: ${timestamp}
 --------------------------------------------------------------------------------
-1. PATIENT DEMOGRAPHICS & CLINICAL RISK PROFILE:
+1. PATIENT RISK PROFILE:
    ${vitalsStr}
    Comorbidities: ${comorbiditiesStr}
    Stated Allergies: ${allergiesStr}
    Dietary Factors: ${dietStr}
 
 2. EVALUATED PHARMACEUTICAL REGIMEN:
-   Primary Agent:   ${drugA?.display_name || 'Drug A'} (Entity #${drugA?.drug_id || 'N/A'})
-   Secondary Agent: ${drugB?.display_name || 'Drug B'} (Entity #${drugB?.drug_id || 'N/A'})
+   Agent 1: ${drugA?.display_name} (Entity #${drugA?.drug_id})
+   Agent 2: ${drugB?.display_name} (Entity #${drugB?.drug_id})
 
-3. DECISION-SUPPORT AUDIT FINDINGS:
-${findingText}${allergyText}${foodText}
+3. DECISION SUPPORT FINDINGS:
+${finding}${allergiesBlock}${foodBlock}
 
-4. PHYSICIAN MANAGEMENT PLAN & DIRECTIVES:
+4. PHYSICIAN MANAGEMENT DIRECTIVES:
 ${getClinicalDirectives().map((d) => '   - ' + d).join('\n')}
 
 5. AUDIT TRAIL:
@@ -406,116 +390,107 @@ ${getClinicalDirectives().map((d) => '   - ' + d).join('\n')}
   };
 
   const handleCopyEMR = () => {
-    const text = generateEMRNote();
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(generateEMRNote());
     setCopiedEMR(true);
     setTimeout(() => setCopiedEMR(false), 2500);
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
-    <div className="clinical-card" style={{ marginTop: '24px' }}>
-      <div className="result-header-bar">
+    <div className="results-bento-dashboard">
+      <div className="results-dashboard-header">
         <div>
-          <div className="result-main-title">
+          <div className="results-main-title">
             Clinical Safety Evaluation: {drugA?.display_name} + {drugB?.display_name}
           </div>
           <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
-            Grounded manufacturer label audit • Zero speculative generation
+            Multi-agent state machine audit • Verbatim openFDA quotations only
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="results-action-buttons">
           <button
             type="button"
-            className="btn-secondary btn-small"
+            className="btn-futuristic-primary"
+            style={{ padding: '8px 16px', fontSize: '0.85rem' }}
             onClick={() => setShowEMR(!showEMR)}
           >
             {showEMR ? 'Hide EMR Note' : '📋 Generate EMR Consultation Note'}
           </button>
-          <button type="button" className="btn-secondary btn-small" onClick={handlePrint}>
+          <button
+            type="button"
+            className="btn-futuristic-primary"
+            style={{ padding: '8px 16px', fontSize: '0.85rem', background: 'rgba(255,255,255,0.06)' }}
+            onClick={() => window.print()}
+          >
             🖨️ Print Clinical Summary
           </button>
         </div>
       </div>
 
-      {/* 1. SEVERE INTERACTION FOUND */}
+      {/* 1. SEVERE INTERACTION FINDING */}
       {isCritical && (
-        <div className="triage-card triage-critical">
-          <div className="triage-header-critical">
-            <span className="severity-indicator-pill-critical">Critical Hazard</span>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#f43f5e' }}>
-              Significant Drug-Drug Interaction Identified
-            </span>
-          </div>
-
-          <p style={{ fontSize: '1.02rem', color: '#f8fafc', marginBottom: '14px', lineHeight: 1.6 }}>
+        <div className="triage-hero-banner triage-hero-critical">
+          <span className="severity-pill-pulsing pill-critical">Critical Clinical Hazard</span>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: '#ffffff', marginBottom: '10px' }}>
+            Significant Drug-Drug Interaction Identified
+          </h3>
+          <p style={{ fontSize: '1.02rem', color: '#f8fafc', lineHeight: 1.6 }}>
             <strong>Mechanism / Clinical Finding:</strong> {summary}
           </p>
 
-          {/* Official Verbatim Citation */}
           {citation_text && (
-            <div className="citation-callout">
-              <div className="citation-header">
-                <span className="citation-tag">
+            <div className="citation-glass-box">
+              <div className="citation-header-row">
+                <span className="citation-authority-tag">
                   Official Manufacturer Verbatim Citation ({source || 'openFDA'})
                 </span>
-                <span style={{ fontSize: '0.72rem', color: '#38bdf8' }}>✓ Verified Grounded</span>
+                <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 600 }}>
+                  ✓ 100% Groundedness Verified
+                </span>
               </div>
-              <div className="citation-quote">&ldquo;{citation_text}&rdquo;</div>
+              <div className="citation-quote-text">&ldquo;{citation_text}&rdquo;</div>
             </div>
           )}
 
-          {/* Doctor Action Directives */}
           {doctorMode && (
-            <div className="doctor-action-box">
-              <div className="doctor-action-title">
+            <div className="doctor-directives-bento">
+              <div className="directives-title">
                 🩺 Prescriber Clinical Management Directives
               </div>
-              <ul className="doctor-action-list">
-                {getClinicalDirectives().map((dir, idx) => (
-                  <li key={idx} className="doctor-action-item">
-                    <span className="action-bullet">▸</span>
-                    <span>{dir}</span>
-                  </li>
-                ))}
-              </ul>
+              {getClinicalDirectives().map((dir, idx) => (
+                <div key={idx} className="directive-bullet-item">
+                  <span style={{ color: '#38bdf8', fontWeight: 700 }}>▸</span>
+                  <span>{dir}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
       )}
 
-      {/* 2. CLEAN NEGATIVE FINDING */}
+      {/* 2. SAFE / NEGATIVE FINDING */}
       {isSafe && (
-        <div className="triage-card triage-safe">
-          <div className="triage-header-critical" style={{ marginBottom: '12px' }}>
-            <span className="severity-indicator-pill-safe">No Hazard Found</span>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#34d399' }}>
-              No Interaction Documented in Official Labeling
-            </span>
-          </div>
-
-          <p style={{ color: '#e2e8f0', fontSize: '0.98rem', lineHeight: 1.6 }}>
+        <div className="triage-hero-banner triage-hero-safe">
+          <span className="severity-pill-pulsing pill-safe">Safe / No Hazard Found</span>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: '#ffffff', marginBottom: '10px' }}>
+            No Adverse Interaction Documented in Manufacturer Text
+          </h3>
+          <p style={{ fontSize: '1.02rem', color: '#f1f5f9', lineHeight: 1.6 }}>
             {summary ||
               `Official manufacturer documentation does not report a kinetic or dynamic interaction between ${drugA?.display_name} and ${drugB?.display_name}.`}
           </p>
 
           {doctorMode && (
-            <div className="doctor-action-box" style={{ borderColor: 'rgba(16, 185, 129, 0.35)' }}>
-              <div className="doctor-action-title" style={{ color: '#34d399' }}>
+            <div className="doctor-directives-bento" style={{ borderColor: 'rgba(16, 185, 129, 0.35)' }}>
+              <div className="directives-title" style={{ color: '#34d399' }}>
                 🩺 Prescriber Guidance
               </div>
-              <ul className="doctor-action-list">
-                {getClinicalDirectives().map((dir, idx) => (
-                  <li key={idx} className="doctor-action-item">
-                    <span className="action-bullet" style={{ color: '#34d399' }}>▸</span>
-                    <span>{dir}</span>
-                  </li>
-                ))}
-              </ul>
+              {getClinicalDirectives().map((dir, idx) => (
+                <div key={idx} className="directive-bullet-item">
+                  <span style={{ color: '#34d399', fontWeight: 700 }}>▸</span>
+                  <span>{dir}</span>
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -523,170 +498,127 @@ ${getClinicalDirectives().map((d) => '   - ' + d).join('\n')}
 
       {/* 3. SAFETY REFUSAL */}
       {isRefusal && (
-        <div className="triage-card triage-refusal">
-          <div className="triage-header-critical" style={{ marginBottom: '12px' }}>
-            <span className="severity-indicator-pill-refusal">Safety Refusal</span>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#c084fc' }}>
-              Unverifiable Claim — System Refused Speculation
-            </span>
-          </div>
-
-          <p style={{ color: '#e2e8f0', fontSize: '0.98rem', lineHeight: 1.6 }}>
+        <div className="triage-hero-banner triage-hero-refusal">
+          <span className="severity-pill-pulsing pill-refusal">Safety Refusal Enforced</span>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: '#ffffff', marginBottom: '10px' }}>
+            Unverifiable Claim — System Refused Speculation
+          </h3>
+          <p style={{ fontSize: '1.02rem', color: '#f1f5f9', lineHeight: 1.6 }}>
             {summary ||
               'The interaction check failed independent groundedness verification against official label sources. Rather than hallucinating, the system strictly refused to guess.'}
           </p>
-
-          <div
-            style={{
-              marginTop: '12px',
-              padding: '10px 14px',
-              background: 'rgba(11, 17, 32, 0.6)',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              color: '#c084fc',
-            }}
-          >
-            <strong>Safety Constraint:</strong> Refusal is a primary clinical feature. In real medicine,
-            abstaining is safer than hallucinating false assurances or spurious contraindications.
-          </div>
         </div>
       )}
 
-      {/* ALLERGY CROSS-REACTIVITY BANNER */}
+      {/* ALLERGY CROSS-REACTIVITY CARD */}
       {allergy_flags && allergy_flags.length > 0 && (
-        <div className="allergy-alert-banner">
-          <div className="allergy-alert-header">
+        <div className="allergy-alert-card">
+          <div className="allergy-banner-title">
             <span>🛑 High-Risk Allergy Cross-Reactivity Alert</span>
           </div>
-          <p style={{ fontSize: '0.88rem', color: '#fecdd3' }}>
-            Deterministic rule-based screening (NIH RxClass) matched patient allergen against drug active ingredients:
+          <p style={{ fontSize: '0.88rem', color: '#fecdd3', marginBottom: '10px' }}>
+            Deterministic rule-based screening (NIH RxClass) matched patient allergen against drug active ingredients with zero LLM speculation:
           </p>
           {allergy_flags.map((flag, idx) => (
-            <div key={idx} className="allergy-item-card">
-              <div className="allergy-item-title">
-                ⚠️ Allergen: &ldquo;{flag.allergy_term || 'Unknown'}&rdquo; ➔ Matched Class: {flag.matched_class || 'Pharmacological Class'}
-                {flag.rxclass_id ? ` (RxClass: ${flag.rxclass_id})` : ''}
+            <div key={idx} style={{ background: 'rgba(8, 12, 22, 0.65)', border: '1px solid rgba(244, 63, 94, 0.3)', borderRadius: '10px', padding: '12px', marginTop: '8px' }}>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff' }}>
+                ⚠️ Allergen: &ldquo;{flag.allergy_term}&rdquo; ➔ Class: {flag.matched_class} {flag.rxclass_id ? `(RxClass: ${flag.rxclass_id})` : ''}
               </div>
-              <div className="allergy-item-note">
-                {flag.clinical_note || flag.cross_reactivity_note || 'High risk of immunologic cross-reactivity.'}
+              <div style={{ fontSize: '0.84rem', color: '#e2e8f0', marginTop: '4px' }}>
+                {flag.clinical_note || flag.cross_reactivity_note}
               </div>
               {flag.reference && (
-                <div className="allergy-item-ref">Reference: {flag.reference}</div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic', marginTop: '4px' }}>
+                  Reference: {flag.reference}
+                </div>
               )}
             </div>
           ))}
         </div>
       )}
 
-      {/* FOOD & DIETARY BANNER */}
+      {/* DIETARY PRECAUTION CARD */}
       {food_interaction_summary && (
-        <div className="diet-alert-banner">
-          <div className="diet-alert-header">
+        <div className="diet-alert-card">
+          <div className="diet-banner-title">
             <span>🥗 Dietary & Food Hazard Advisory</span>
           </div>
-          <p style={{ fontSize: '0.9rem', color: '#fef3c7', lineHeight: 1.55 }}>
+          <p style={{ fontSize: '0.92rem', color: '#fef3c7', lineHeight: 1.6 }}>
             {food_interaction_summary}
           </p>
         </div>
       )}
 
-      {/* AUDIT META FOOTER */}
-      <div className="verification-footer">
-        <span className="audit-badge source-fda">
-          <span>Authority:</span> {source || 'openFDA Manufacturer Label'}
+      {/* AUDIT FOOTNOTES */}
+      <div className="audit-footnotes-bar">
+        <span className="audit-tag-pill pill-verified">
+          Authority: {source || 'openFDA'}
         </span>
-        <span className="audit-badge">
-          <span>Entity Translation:</span> DRAP ➔ RxNorm INN/USAN
+        <span className="audit-tag-pill">
+          Entity Translation: DRAP ➔ RxNorm INN/USAN
         </span>
-        <span className="audit-badge">
-          <span>Allergy Logic:</span> Deterministic RxClass (0 LLM Calls)
+        <span className="audit-tag-pill">
+          Allergy Logic: Deterministic RxClass (0 LLM Calls)
         </span>
-        <span className="audit-badge">
-          <span>Groundedness Audit:</span> {isCritical || isSafe ? 'Passed' : 'Refusal Triggered'}
+        <span className="audit-tag-pill">
+          Groundedness Audit: {isCritical || isSafe ? 'Passed' : 'Refusal Triggered'}
         </span>
       </div>
 
-      {/* EMR CLINICAL NOTE PREVIEW (Doctor-specific) */}
+      {/* EMR NOTE MODAL */}
       {showEMR && (
-        <div className="emr-preview-card">
-          <div className="emr-header">
+        <div className="emr-preview-modal">
+          <div className="emr-modal-header">
             <div>
-              <div className="emr-clinic-name">CLINICAL DECISION SUPPORT CONSULTATION NOTE</div>
-              <div className="emr-meta-text">Hospital EMR & Prescription Safety Record</div>
+              <div className="emr-clinic-logo">CLINICAL DECISION SUPPORT CONSULTATION NOTE</div>
+              <div style={{ fontSize: '0.8rem', color: '#475569' }}>Hospital EMR & Prescription Safety Record</div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div className="emr-meta-text">{new Date().toLocaleDateString()}</div>
-              <div className="emr-meta-text">Confidential Medical Record</div>
+            <div style={{ textAlign: 'right', fontSize: '0.8rem', color: '#475569' }}>
+              <div>{new Date().toLocaleDateString()}</div>
+              <div>Confidential Medical Record</div>
             </div>
           </div>
 
-          <div className="emr-section-title">Patient Profile & Risk Factors</div>
-          <div className="emr-text-block">
-            <strong>Demographics:</strong> {patientProfile.ageGroup} | <strong>Renal:</strong> {patientProfile.eGFR} | <strong>Hepatic:</strong> {patientProfile.hepatic}
+          <div className="emr-section-heading">Patient Profile & Risk Factors</div>
+          <div style={{ fontSize: '0.88rem', color: '#1e293b' }}>
+            <strong>Demographics:</strong> {patientProfile.ageGroup} | <strong>eGFR:</strong> {patientProfile.eGFR} | <strong>Hepatic:</strong> {patientProfile.hepatic}
             <br />
-            <strong>Comorbidities:</strong> {patientProfile.comorbidities.join(', ') || 'None reported'}
+            <strong>Comorbidities:</strong> {patientProfile.comorbidities.join(', ') || 'None'}
             <br />
-            <strong>Documented Allergies:</strong> {patientProfile.allergies || 'No known drug allergies (NKDA)'}
-            <br />
-            <strong>Dietary Factors:</strong> {patientProfile.diet || 'Standard diet'}
+            <strong>Allergies:</strong> {patientProfile.allergies || 'NKDA'} | <strong>Diet:</strong> {patientProfile.diet || 'Standard'}
           </div>
 
-          <div className="emr-section-title">Evaluated Pharmaceutical Regimen</div>
-          <div className="emr-text-block">
-            1. <strong>{drugA?.display_name}</strong> (Generic Entity #{drugA?.drug_id})
+          <div className="emr-section-heading">Evaluated Pharmaceutical Regimen</div>
+          <div style={{ fontSize: '0.88rem', color: '#1e293b' }}>
+            1. <strong>{drugA?.display_name}</strong> (Entity #{drugA?.drug_id})
             <br />
-            2. <strong>{drugB?.display_name}</strong> (Generic Entity #{drugB?.drug_id})
+            2. <strong>{drugB?.display_name}</strong> (Entity #{drugB?.drug_id})
           </div>
 
-          <div className="emr-section-title">Clinical Finding & Verified Citations</div>
-          <div className="emr-text-block">
-            {isCritical && (
-              <>
-                <strong style={{ color: '#b91c1c' }}>[CRITICAL INTERACTION]:</strong> {summary}
-                {citation_text && (
-                  <div className="emr-citation-box">
-                    &ldquo;{citation_text}&rdquo; (Source: {source || 'openFDA'})
-                  </div>
-                )}
-              </>
-            )}
-            {isSafe && (
-              <span style={{ color: '#15803d' }}>
-                <strong>[SAFE / NEGATIVE]:</strong> {summary}
-              </span>
-            )}
-            {isRefusal && (
-              <span style={{ color: '#6b21a8' }}>
-                <strong>[UNVERIFIABLE]:</strong> Refusal enforced — no reliable citation found.
-              </span>
-            )}
+          <div className="emr-section-heading">Decision Support Findings</div>
+          <div style={{ fontSize: '0.88rem', color: '#1e293b' }}>
+            {isCritical && <span style={{ color: '#b91c1c' }}><strong>[CRITICAL HAZARD]:</strong> {summary}</span>}
+            {isSafe && <span style={{ color: '#15803d' }}><strong>[SAFE / NEGATIVE]:</strong> {summary}</span>}
+            {isRefusal && <span style={{ color: '#6b21a8' }}><strong>[UNVERIFIABLE]:</strong> Refusal enforced.</span>}
           </div>
 
-          {allergy_flags && allergy_flags.length > 0 && (
-            <>
-              <div className="emr-section-title">Allergy Cross-Reactivity Risk</div>
-              <div className="emr-text-block">
-                {allergy_flags.map((f, i) => (
-                  <div key={i}>
-                    • <strong>{f.allergy_term}</strong> vs {f.matched_class}: {f.clinical_note || f.cross_reactivity_note}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          <div className="emr-section-title">Physician Action Directives</div>
-          <div className="emr-text-block">
+          <div className="emr-section-heading">Physician Management Directives</div>
+          <div style={{ fontSize: '0.88rem', color: '#1e293b' }}>
             {getClinicalDirectives().map((d, i) => (
               <div key={i}>• {d}</div>
             ))}
           </div>
 
-          <div className="emr-actions-row">
-            <button type="button" className="btn-primary" onClick={handleCopyEMR}>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            <button type="button" className="btn-futuristic-primary" onClick={handleCopyEMR}>
               {copiedEMR ? '✓ Copied to Clipboard!' : 'Copy Formatted EMR Note'}
             </button>
-            <button type="button" className="btn-secondary" onClick={handlePrint}>
+            <button
+              type="button"
+              className="btn-futuristic-primary"
+              style={{ background: '#e2e8f0', color: '#0f172a' }}
+              onClick={() => window.print()}
+            >
               Print Note
             </button>
           </div>
@@ -697,16 +629,16 @@ ${getClinicalDirectives().map((d) => '   - ' + d).join('\n')}
 }
 
 /**
- * Main Application Component
+ * Main Futuristic SaaS Application
  */
 export default function App() {
   const [roleMode, setRoleMode] = useState('doctor'); // 'doctor' | 'pharmacist'
 
-  // Prescribed Drugs
+  // Selected drugs
   const [drugA, setDrugA] = useState(null);
   const [drugB, setDrugB] = useState(null);
 
-  // Ephemeral Patient Profile (Never Persisted to DB)
+  // Ephemeral patient clinical profile (never saved to database)
   const [patientProfile, setPatientProfile] = useState({
     ageGroup: 'Adult (18-64 yrs)',
     eGFR: 'Normal (> 90 mL/min)',
@@ -717,7 +649,7 @@ export default function App() {
     diet: '',
   });
 
-  // Async Interaction Check State
+  // Async job state
   const [jobId, setJobId] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [result, setResult] = useState(null);
@@ -784,7 +716,6 @@ export default function App() {
       .filter(Boolean);
 
     try {
-      // 1. POST /check to enqueue job
       const resp = await fetch(`${API_BASE}/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -806,7 +737,6 @@ export default function App() {
       setJobId(newJobId);
       setJobStatus('queued');
 
-      // 2. Open WebSocket for real-time Postgres LISTEN/NOTIFY push
       const wsUrl = `${WS_BASE}/ws/jobs/${newJobId}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -831,7 +761,6 @@ export default function App() {
         }
       };
 
-      // Safety timer for polling fallback
       setTimeout(() => {
         if (!result && jobStatus !== 'done' && jobStatus !== 'failed') {
           startPollingFallback(newJobId);
@@ -844,7 +773,6 @@ export default function App() {
     }
   };
 
-  // Preset Selector Loader
   const loadPreset = async (preset) => {
     setActivePreset(preset.id);
     setJobStatus(null);
@@ -923,125 +851,145 @@ export default function App() {
   const canCheck = Boolean(drugA?.drug_id && drugB?.drug_id && !isChecking);
 
   return (
-    <div className="app-container">
-      {/* Top Header & Role Switcher */}
-      <header className="header-bar">
-        <div className="brand-wrapper">
-          <div className="brand-icon-shield">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="M12 8v8" />
-              <path d="M8 12h8" />
+    <div className="app-wrapper">
+      {/* 1. MEDVI-INSPIRED FLOATING NAVBAR */}
+      <nav className="floating-nav">
+        <div className="brand-capsule">
+          <div className="brand-icon-aura">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" />
+              <path d="M2 17l10 5 10-5" />
+              <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
-          <div>
-            <div className="brand-title">
+          <div className="brand-wordmark">
+            <div className="brand-name">
               DietSync
-              <span className="brand-badge">Clinical CDS v2.0</span>
+              <span className="brand-tag-glow">Medvi Clinical SaaS</span>
             </div>
-            <div className="brand-subtitle">
-              Citation-Grounded Drug Interaction & Pakistani Brand Resolution Engine
-            </div>
+            <div className="brand-tagline">Citation-Grounded Decision Support</div>
           </div>
         </div>
 
-        {/* Role Toggle Switch: Doctor vs Pharmacist */}
-        <div className="mode-switch-group">
-          <button
-            type="button"
-            className={`mode-btn ${roleMode === 'doctor' ? 'active' : ''}`}
-            onClick={() => setRoleMode('doctor')}
-          >
-            🩺 Physician Prescriber
-          </button>
-          <button
-            type="button"
-            className={`mode-btn ${roleMode === 'pharmacist' ? 'active' : ''}`}
-            onClick={() => setRoleMode('pharmacist')}
-          >
-            💊 Clinical Pharmacist
-          </button>
-        </div>
-      </header>
+        <div className="nav-controls">
+          {/* Cloud Telemetry Pill */}
+          <div className="telemetry-pill">
+            <span className="telemetry-dot"></span>
+            <span>Supabase & CloudAMQP Live</span>
+          </div>
 
-      {/* Clinical Demo Preset Quick Bar (For Pitch & Fast Triage) */}
-      <div className="demo-preset-bar">
-        <span className="preset-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-          </svg>
-          Clinical Presets:
-        </span>
-        <div className="preset-chips-container">
-          {CLINICAL_PRESETS.map((preset) => (
+          {/* Segmented Role Switcher */}
+          <div className="segmented-role-switch">
             <button
-              key={preset.id}
               type="button"
-              className={`preset-chip ${activePreset === preset.id ? 'active-preset' : ''}`}
-              onClick={() => loadPreset(preset)}
-              title={preset.description}
+              className={`role-tab-btn ${roleMode === 'doctor' ? 'active' : ''}`}
+              onClick={() => setRoleMode('doctor')}
             >
-              {preset.title}
+              🩺 Physician Prescriber
             </button>
+            <button
+              type="button"
+              className={`role-tab-btn ${roleMode === 'pharmacist' ? 'active' : ''}`}
+              onClick={() => setRoleMode('pharmacist')}
+            >
+              💊 Clinical Pharmacist
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION */}
+      <section className="hero-showcase">
+        <div className="hero-pill-badge">
+          <span>✨ Citation-Grounded Prescribing Safety Engine</span>
+        </div>
+        <h1 className="hero-headline">
+          Clinical Decision Support Meets <br />
+          <span className="gradient-text-glow">Verifiable AI Intelligence</span>
+        </h1>
+        <p className="hero-subhead">
+          Translating local Pakistani brands into standardized pharmacological entities, with deterministic
+          allergy cross-reactivity and 100% manufacturer citation verification.
+        </p>
+
+        {/* Trust Badges Ribbon */}
+        <div className="trust-badges-ribbon">
+          <span className="trust-badge-item">✓ 100% Verbatim openFDA Citations</span>
+          <span className="trust-badge-item">✓ NIH RxClass Deterministic Matching</span>
+          <span className="trust-badge-item">✓ Zero LLM Hallucination Barrier</span>
+          <span className="trust-badge-item">✓ HIPAA Ephemeral Privacy</span>
+        </div>
+      </section>
+
+      {/* 3. CLINICAL DEMO PRESETS (BENTO GRID STRIP) */}
+      <section className="presets-bento-strip">
+        <div className="presets-strip-label">
+          <span className="strip-label-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+            Clinical Demonstration Presets:
+          </span>
+          <span style={{ fontSize: '0.72rem', color: '#64748b' }}>One-click pitch scenarios</span>
+        </div>
+
+        <div className="presets-scroll-row">
+          {CLINICAL_PRESETS.map((preset) => (
+            <div
+              key={preset.id}
+              className={`preset-card-chip ${activePreset === preset.id ? 'active-preset' : ''}`}
+              onClick={() => loadPreset(preset)}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <div className="preset-chip-title">{preset.title}</div>
+              </div>
+              <div style={{ fontSize: '0.68rem', color: '#38bdf8', fontWeight: 600, marginBottom: '2px' }}>
+                {preset.badge}
+              </div>
+              <div className="preset-chip-sub">{preset.description}</div>
+            </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Main Prescription & Drug Resolution Card */}
-      <div className="clinical-card">
-        <div className="card-header">
-          <div className="card-title">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#38bdf8"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+      {/* 4. MEDICATION WORKBENCH (DUAL AGENT CARDS + SWAP) */}
+      <main className="workbench-container">
+        <div className="workbench-header">
+          <div className="workbench-title-group">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
-            Prescription Regimen Resolution
+            <div className="workbench-main-title">Interactive Medication Workbench</div>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {drugA && drugB && (
-              <button
-                type="button"
-                className="btn-secondary btn-small"
-                onClick={handleSwapDrugs}
-                title="Swap Drug A and Drug B"
-              >
-                ⇄ Swap Entities
-              </button>
-            )}
-            <span className="card-badge">DRAP ➔ RxNorm INN/USAN</span>
-          </div>
+          <span className="workbench-badge">DRAP ➔ RxNorm INN/USAN Resolution</span>
         </div>
 
-        {/* Drug Resolvers Grid */}
-        <div className="grid-two-col">
+        {/* Dual Column Grid with Center Swap Button */}
+        <div className="workbench-grid">
           <DrugResolver
-            label="Primary Pharmaceutical Entity (Drug A)"
+            label="Primary Pharmaceutical Entity"
             roleLabel="Agent 1"
             selectedDrug={drugA}
             onSelect={setDrugA}
             onClear={() => setDrugA(null)}
             inputPlaceholder="e.g. Disprin, Lipitor, Panadol..."
           />
+
+          <button
+            type="button"
+            className="swap-button-circle"
+            onClick={handleSwapDrugs}
+            title="Swap Drug A and Drug B"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+              <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+
           <DrugResolver
-            label="Secondary Pharmaceutical Entity (Drug B)"
+            label="Secondary Pharmaceutical Entity"
             roleLabel="Agent 2"
             selectedDrug={drugB}
             onSelect={setDrugB}
@@ -1050,41 +998,30 @@ export default function App() {
           />
         </div>
 
-        {/* DOCTOR-SPECIFIC PATIENT PROFILE MODULE */}
+        {/* 5. DOCTOR'S TELEHEALTH PATIENT INTAKE (MEDVI STYLE) */}
         {roleMode === 'doctor' && (
-          <div className="clinical-profile-panel">
-            <div className="profile-header">
-              <div className="profile-title">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#38bdf8"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+          <div className="clinical-intake-module">
+            <div className="intake-header">
+              <div className="intake-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                Patient Clinical Risk Factors & Organ Function
+                Patient Clinical Profile & Organ Function Intake
               </div>
-              <span className="privacy-guarantee">
-                🔒 HIPAA & Ephemeral: Request-scoped factors are never stored in DB
+              <span className="hipaa-shield-pill">
+                🔒 HIPAA Ephemeral: Request-scoped factors are never stored in DB
               </span>
             </div>
 
-            {/* Organ Function & Demographics Selectors */}
-            <div className="clinical-vitals-grid">
+            {/* Vitals Bento Grid */}
+            <div className="vitals-bento-grid">
               <div className="vital-select-card">
-                <div className="vital-select-label">Age Demographics</div>
+                <div className="vital-card-label">Age Demographics</div>
                 <select
-                  className="vital-select-input"
+                  className="futuristic-select"
                   value={patientProfile.ageGroup}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, ageGroup: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, ageGroup: e.target.value })}
                 >
                   <option>Pediatric (&lt; 18 yrs)</option>
                   <option>Adult (18-64 yrs)</option>
@@ -1093,13 +1030,11 @@ export default function App() {
               </div>
 
               <div className="vital-select-card">
-                <div className="vital-select-label">Renal Function (eGFR)</div>
+                <div className="vital-card-label">Renal Function (eGFR)</div>
                 <select
-                  className="vital-select-input"
+                  className="futuristic-select"
                   value={patientProfile.eGFR}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, eGFR: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, eGFR: e.target.value })}
                 >
                   <option>Normal (&gt; 90 mL/min)</option>
                   <option>Mild Impairment (60-89 mL/min)</option>
@@ -1109,13 +1044,11 @@ export default function App() {
               </div>
 
               <div className="vital-select-card">
-                <div className="vital-select-label">Hepatic Staging</div>
+                <div className="vital-card-label">Hepatic Staging</div>
                 <select
-                  className="vital-select-input"
+                  className="futuristic-select"
                   value={patientProfile.hepatic}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, hepatic: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, hepatic: e.target.value })}
                 >
                   <option>Normal Hepatic Function</option>
                   <option>Mild (Child-Pugh A)</option>
@@ -1125,13 +1058,11 @@ export default function App() {
               </div>
 
               <div className="vital-select-card">
-                <div className="vital-select-label">Pregnancy / Lactation</div>
+                <div className="vital-card-label">Pregnancy / Lactation</div>
                 <select
-                  className="vital-select-input"
+                  className="futuristic-select"
                   value={patientProfile.pregnancy}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, pregnancy: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, pregnancy: e.target.value })}
                 >
                   <option>Non-pregnant</option>
                   <option>Pregnant (1st Trimester)</option>
@@ -1142,11 +1073,11 @@ export default function App() {
             </div>
 
             {/* Comorbidities */}
-            <div className="comorbidities-group">
-              <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600 }}>
+            <div className="comorbidity-section">
+              <div style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>
                 Patient Comorbidities & Chronic Conditions:
               </div>
-              <div className="comorbidities-grid">
+              <div className="comorbidity-chips-row">
                 {[
                   'Hypertension',
                   'Type 2 Diabetes',
@@ -1157,9 +1088,7 @@ export default function App() {
                 ].map((cond) => (
                   <span
                     key={cond}
-                    className={`condition-pill ${
-                      patientProfile.comorbidities.includes(cond) ? 'active' : ''
-                    }`}
+                    className={`comorbidity-pill ${patientProfile.comorbidities.includes(cond) ? 'active' : ''}`}
                     onClick={() => toggleComorbidity(cond)}
                   >
                     {patientProfile.comorbidities.includes(cond) ? '✓ ' : '+ '}
@@ -1169,31 +1098,27 @@ export default function App() {
               </div>
             </div>
 
-            {/* Allergies & Diet Inputs with Quick-Add Pills */}
-            <div className="grid-two-col" style={{ marginTop: '16px', marginBottom: 0 }}>
-              <div>
-                <div style={{ fontSize: '0.78rem', color: '#f43f5e', fontWeight: 700 }}>
-                  Reported Drug Allergies (Rule-based RxClass):
+            {/* Allergies & Diet Inputs */}
+            <div className="intake-dual-inputs">
+              <div className="allergy-diet-card">
+                <div style={{ fontSize: '0.76rem', color: '#fda4af', fontWeight: 700 }}>
+                  Reported Drug Allergies (Deterministic RxClass):
                 </div>
                 <input
                   type="text"
-                  className="clinical-input"
-                  style={{ marginTop: '6px' }}
+                  className="futuristic-input"
+                  style={{ marginTop: '8px' }}
                   placeholder="e.g. penicillin, aspirin, sulfa..."
                   value={patientProfile.allergies}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, allergies: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, allergies: e.target.value })}
                 />
-                <div className="pill-selector-row">
+                <div className="tag-selector-row">
                   {QUICK_ALLERGIES.map((a) => {
-                    const isSelected = patientProfile.allergies
-                      .toLowerCase()
-                      .includes(a.toLowerCase());
+                    const isSelected = patientProfile.allergies.toLowerCase().includes(a.toLowerCase());
                     return (
                       <span
                         key={a}
-                        className={`pill-tag ${isSelected ? 'selected-allergy' : ''}`}
+                        className={`tag-pill ${isSelected ? 'selected-allergy' : ''}`}
                         onClick={() => toggleQuickAllergy(a)}
                       >
                         {isSelected ? '✓ ' : '+ '}
@@ -1204,29 +1129,25 @@ export default function App() {
                 </div>
               </div>
 
-              <div>
-                <div style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 700 }}>
+              <div className="allergy-diet-card">
+                <div style={{ fontSize: '0.76rem', color: '#fde68a', fontWeight: 700 }}>
                   Dietary Habits & Supplements:
                 </div>
                 <input
                   type="text"
-                  className="clinical-input"
-                  style={{ marginTop: '6px' }}
+                  className="futuristic-input"
+                  style={{ marginTop: '8px' }}
                   placeholder="e.g. grapefruit juice, alcohol..."
                   value={patientProfile.diet}
-                  onChange={(e) =>
-                    setPatientProfile({ ...patientProfile, diet: e.target.value })
-                  }
+                  onChange={(e) => setPatientProfile({ ...patientProfile, diet: e.target.value })}
                 />
-                <div className="pill-selector-row">
+                <div className="tag-selector-row">
                   {QUICK_DIET.map((d) => {
-                    const isSelected = patientProfile.diet
-                      .toLowerCase()
-                      .includes(d.toLowerCase());
+                    const isSelected = patientProfile.diet.toLowerCase().includes(d.toLowerCase());
                     return (
                       <span
                         key={d}
-                        className={`pill-tag ${isSelected ? 'selected-diet' : ''}`}
+                        className={`tag-pill ${isSelected ? 'selected-diet' : ''}`}
                         onClick={() => toggleQuickDiet(d)}
                       >
                         {isSelected ? '✓ ' : '+ '}
@@ -1240,25 +1161,33 @@ export default function App() {
           </div>
         )}
 
-        {/* Action Button */}
-        <button
-          type="button"
-          className="btn-primary btn-action-main"
-          disabled={!canCheck}
-          onClick={handleCheckInteraction}
-        >
-          {isChecking ? (
-            <>
-              <span className="spinner-clinical" style={{ width: 18, height: 18, margin: 0, borderWidth: 2 }}></span>
-              Evaluating Grounded Interactions & Safety Gates...
-            </>
-          ) : (
-            'Execute Grounded Clinical Safety Check ➔'
-          )}
-        </button>
-      </div>
+        {/* 6. MAIN CALL-TO-ACTION BUTTON */}
+        <div className="main-cta-container">
+          <button
+            type="button"
+            className="btn-cta-futuristic"
+            disabled={!canCheck}
+            onClick={handleCheckInteraction}
+          >
+            {isChecking ? (
+              <>
+                <span className="futuristic-spinner" style={{ width: 20, height: 20, margin: 0, borderWidth: 2.5 }}></span>
+                Running Multi-Agent Safety Audit & Citation Verifier...
+              </>
+            ) : (
+              <>
+                <span>Run Citation-Grounded Safety Audit</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </>
+            )}
+          </button>
+        </div>
+      </main>
 
-      {/* Differentiated Results Panel with Doctor Clinical Directives */}
+      {/* 7. BENTO-GRID RESULT DASHBOARD */}
       <ResultPanel
         jobStatus={jobStatus}
         result={result}
