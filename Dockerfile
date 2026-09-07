@@ -22,8 +22,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application source
 COPY . .
 
-# Default port for FastAPI
+# Ensure entrypoint has unix line endings and execution permissions
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Default port
 EXPOSE 8000
 
-# Default command runs FastAPI API; override with command: python -m worker.consumer for worker
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Universal entrypoint: reads $PORT dynamically (Render sets PORT=10000, local defaults to 8000)
+ENTRYPOINT ["/app/entrypoint.sh"]
