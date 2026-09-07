@@ -22,11 +22,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application source
 COPY . .
 
-# Ensure entrypoint has unix line endings and execution permissions
-RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+# Ensure scripts have unix line endings and execution permissions
+RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
 
 # Default port
 EXPOSE 8000
 
-# Start FastAPI with dynamic $PORT evaluation (Render sets PORT=10000, defaults to 8000)
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start both FastAPI and LangGraph Worker in one container
+CMD ["/bin/sh", "/app/start.sh"]
